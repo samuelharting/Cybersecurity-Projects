@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Web Encryptor/Decryptor</title>
+    <style>
+        /* Modern, professional styling for cybersecurity portfolio */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .shift-input {
+            max-width: 120px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        .encrypt-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .decrypt-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .clear-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 80px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .result-text {
+            color: #34495e;
+            font-size: 16px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            min-height: 50px;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 25px;
+            color: #1565c0;
+            font-size: 14px;
+        }
+
+        .examples-section {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .examples-label {
+            display: block;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .example-btn {
+            background: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 6px 12px;
+            margin: 2px 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .example-btn:hover {
+            background: #d5dbdb;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .copy-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-top: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Caesar Cipher</h1>
+            <p>Encrypt and decrypt text using the classic Caesar cipher</p>
+        </div>
+
+        <div class="input-group">
+            <label for="inputText">Enter Text:</label>
+            <input type="text" id="inputText" placeholder="Type your message here..." maxlength="1000">
+            <div class="examples-section">
+                <span class="examples-label">Quick Examples:</span>
+                <button class="example-btn" onclick="loadExample('Hello World!')">Hello World!</button>
+                <button class="example-btn" onclick="loadExample('The quick brown fox jumps over the lazy dog')">Pangram</button>
+                <button class="example-btn" onclick="loadExample('ATTACK AT DAWN')">Military</button>
+                <button class="example-btn" onclick="loadExample('Secret Message 123!')">Mixed Text</button>
+            </div>
+            <div id="textError" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="shiftValue">Shift Value (1-25):</label>
+            <input type="number" id="shiftValue" class="shift-input" min="1" max="25" value="3" placeholder="3">
+            <div id="shiftError" class="error"></div>
+        </div>
+
+        <div class="button-group">
+            <button class="encrypt-btn" onclick="encryptText()">🔒 Encrypt</button>
+            <button class="decrypt-btn" onclick="decryptText()">🔓 Decrypt</button>
+            <button class="clear-btn" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+
+        <div class="result-section">
+            <div class="result-label">Result:</div>
+            <div id="result" class="result-text">Your encrypted/decrypted text will appear here...</div>
+            <button id="copyBtn" class="copy-btn" onclick="copyResult()" style="display: none;">📋 Copy Result</button>
+        </div>
+
+        <div class="info-box">
+            <strong>How it works:</strong> The Caesar cipher shifts each letter by a fixed number of positions in the alphabet. 
+            For example, with a shift of 3, 'A' becomes 'D', 'B' becomes 'E', etc. Non-alphabetic characters remain unchanged.
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Caesar Cipher Implementation
+         * Core function that performs the character shifting logic
+         */
+        function caesarCipher(text, shift, decrypt = false) {
+            // If decrypting, reverse the shift direction
+            if (decrypt) {
+                shift = -shift;
+            }
+            
+            // Normalize shift to handle values outside 0-25 range
+            shift = ((shift % 26) + 26) % 26;
+            
+            let result = '';
+            
+            // Process each character in the input text
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                
+                // Check if character is a letter
+                if (char.match(/[a-zA-Z]/)) {
+                    // Determine if uppercase or lowercase
+                    let isUpperCase = char === char.toUpperCase();
+                    
+                    // Convert to lowercase for processing
+                    char = char.toLowerCase();
+                    
+                    // Perform the shift (a=0, b=1, ..., z=25)
+                    let charCode = char.charCodeAt(0) - 97; // 'a' = 97
+                    let shiftedCode = (charCode + shift) % 26;
+                    let shiftedChar = String.fromCharCode(shiftedCode + 97);
+                    
+                    // Restore original case
+                    if (isUpperCase) {
+                        shiftedChar = shiftedChar.toUpperCase();
+                    }
+                    
+                    result += shiftedChar;
+                } else {
+                    // Non-alphabetic characters remain unchanged
+                    result += char;
+                }
+            }
+            
+            return result;
+        }
+
+        /**
+         * Input validation function
+         * Checks if the input text and shift value are valid
+         */
+        function validateInputs() {
+            const text = document.getElementById('inputText').value.trim();
+            const shift = parseInt(document.getElementById('shiftValue').value);
+            
+            // Clear previous error messages
+            document.getElementById('textError').textContent = '';
+            document.getElementById('shiftError').textContent = '';
+            
+            let isValid = true;
+            
+            // Validate text input
+            if (!text) {
+                document.getElementById('textError').textContent = 'Please enter some text to encrypt/decrypt.';
+                isValid = false;
+            }
+            
+            // Validate shift value
+            if (isNaN(shift) || shift < 1 || shift > 25) {
+                document.getElementById('shiftError').textContent = 'Shift value must be a number between 1 and 25.';
+                isValid = false;
+            }
+            
+            return { isValid, text, shift };
+        }
+
+        /**
+         * Encrypt button handler
+         * Validates input and performs encryption
+         */
+        function encryptText() {
+            const validation = validateInputs();
+            
+            if (!validation.isValid) {
+                return;
+            }
+            
+            const encrypted = caesarCipher(validation.text, validation.shift, false);
+            document.getElementById('result').textContent = encrypted;
+            
+            // Show copy button when there's a result
+            document.getElementById('copyBtn').style.display = 'block';
+        }
+
+        /**
+         * Decrypt button handler
+         * Validates input and performs decryption
+         */
+        function decryptText() {
+            const validation = validateInputs();
+            
+            if (!validation.isValid) {
+                return;
+            }
+            
+            const decrypted = caesarCipher(validation.text, validation.shift, true);
+            document.getElementById('result').textContent = decrypted;
+            
+            // Show copy button when there's a result
+            document.getElementById('copyBtn').style.display = 'block';
+        }
+
+        /**
+         * Clear all inputs and results
+         * Resets the form to initial state
+         */
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('shiftValue').value = '3';
+            document.getElementById('result').textContent = 'Your encrypted/decrypted text will appear here...';
+            
+            // Clear any error messages
+            document.getElementById('textError').textContent = '';
+            document.getElementById('shiftError').textContent = '';
+            
+            // Hide copy button
+            document.getElementById('copyBtn').style.display = 'none';
+        }
+
+        /**
+         * Load example text into input field
+         * Makes it easy for users to test without typing
+         */
+        function loadExample(exampleText) {
+            document.getElementById('inputText').value = exampleText;
+            // Clear any previous errors
+            document.getElementById('textError').textContent = '';
+        }
+
+        /**
+         * Copy result to clipboard
+         * Provides easy way to use the encrypted/decrypted text
+         */
+        function copyResult() {
+            const resultText = document.getElementById('result').textContent;
+            
+            // Use modern clipboard API if available
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(resultText).then(function() {
+                    showCopyFeedback();
+                }).catch(function(err) {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyTextToClipboard(resultText);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(resultText);
+            }
+        }
+
+        /**
+         * Fallback copy method for older browsers
+         */
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyFeedback();
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        /**
+         * Show visual feedback when text is copied
+         */
+        function showCopyFeedback() {
+            const copyBtn = document.getElementById('copyBtn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✓ Copied!';
+            copyBtn.style.background = '#2ecc71';
+            
+            setTimeout(function() {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '#27ae60';
+            }, 1500);
+        }
+
+        /**
+         * Allow Enter key to trigger encryption
+         * Improves user experience
+         */
+        document.getElementById('inputText').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                encryptText();
+            }
+        });
+
+        document.getElementById('shiftValue').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                encryptText();
+            }
+        });
+
+        // Auto-focus on the text input when page loads
+        window.onload = function() {
+            document.getElementById('inputText').focus();
+        };
+    </script>
+</body>
+</html>
