@@ -17,7 +17,7 @@ A professional web-based cybersecurity tool that evaluates password strength in 
   - Lowercase letters (a-z)
   - Numbers (0-9)
   - Special characters (!@#$%^&*)
-- **Total scale**: 0-10 points with clear strength categories
+- **Total scale**: 0-7 points with clear strength categories
 
 ### 🎨 Modern Web Interface
 - **Professional dark theme** optimized for cybersecurity aesthetics
@@ -65,15 +65,15 @@ Password-Strength-Checker/
 
 ## 📊 Scoring Algorithm
 
-The tool evaluates passwords on a 0-10 scale:
+The tool evaluates passwords on a 0-7 scale:
 
 | Score | Strength Level | Description |
 |-------|---------------|-------------|
-| 0-1   | Very Weak     | Minimal security, easily cracked |
-| 2-3   | Weak          | Basic requirements not met |
-| 4-5   | Moderate      | Decent but could be stronger |
-| 6-7   | Strong        | Good security practices |
-| 8-10  | Very Strong   | Excellent security, recommended |
+| 0     | Very Weak     | No security, easily cracked |
+| 1-2   | Weak          | Basic requirements not met |
+| 3-4   | Moderate      | Decent but could be stronger |
+| 5-6   | Strong        | Good security practices |
+| 7     | Very Strong   | Excellent security, recommended |
 
 ## 🔍 Algorithm Details
 
@@ -87,6 +87,8 @@ The tool evaluates passwords on a 0-10 scale:
 - +1 point for lowercase letters present  
 - +1 point for numbers present
 - +1 point for special characters present
+
+### Maximum Score: 7 points (3 length + 4 character types)
 
 ### Smart Recommendations
 The tool provides personalized recommendations based on:

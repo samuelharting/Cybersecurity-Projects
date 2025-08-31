@@ -47,7 +47,7 @@
                 <div class="strength-meter-section">
                     <div class="strength-score">
                         <span class="score-text">Strength Score: </span>
-                        <span id="score-value" class="score-value">0/10</span>
+                        <span id="score-value" class="score-value">0/7</span>
                         <span id="strength-level" class="strength-level">Enter password</span>
                     </div>
                     
@@ -138,6 +138,76 @@
                                 <i class="fas fa-times"></i>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Example Passwords Section -->
+                <div class="examples-section">
+                    <h3 class="examples-title">
+                        <i class="fas fa-flask"></i>
+                        Quick Test Examples
+                    </h3>
+                    <p class="examples-subtitle">Click any example to instantly test it:</p>
+                    
+                    <div class="examples-grid">
+                        <button class="example-btn very-weak-example" data-password="">
+                            <div class="example-header">
+                                <span class="example-label">Empty</span>
+                                <span class="example-score">0/7</span>
+                            </div>
+                            <div class="example-preview">(empty password)</div>
+                        </button>
+
+                        <button class="example-btn weak-example" data-password="hello">
+                            <div class="example-header">
+                                <span class="example-label">Weak</span>
+                                <span class="example-score">2/7</span>
+                            </div>
+                            <div class="example-preview">hello</div>
+                        </button>
+
+                        <button class="example-btn moderate-example" data-password="Password">
+                            <div class="example-header">
+                                <span class="example-label">Moderate</span>
+                                <span class="example-score">4/7</span>
+                            </div>
+                            <div class="example-preview">Password</div>
+                        </button>
+
+                        <button class="example-btn strong-example" data-password="Password1">
+                            <div class="example-header">
+                                <span class="example-label">Strong</span>
+                                <span class="example-score">5/7</span>
+                            </div>
+                            <div class="example-preview">Password1</div>
+                        </button>
+
+                        <button class="example-btn strong-example" data-password="Password123">
+                            <div class="example-header">
+                                <span class="example-label">Strong</span>
+                                <span class="example-score">5/7</span>
+                            </div>
+                            <div class="example-preview">Password123</div>
+                        </button>
+
+                        <button class="example-btn very-strong-example" data-password="Password123!">
+                            <div class="example-header">
+                                <span class="example-label">Very Strong</span>
+                                <span class="example-score">7/7</span>
+                            </div>
+                            <div class="example-preview">Password123!</div>
+                        </button>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button id="clear-password-btn" class="action-btn clear-btn">
+                            <i class="fas fa-eraser"></i>
+                            Clear Password
+                        </button>
+                        <button id="generate-random-btn" class="action-btn generate-btn">
+                            <i class="fas fa-dice"></i>
+                            Random Test
+                        </button>
                     </div>
                 </div>
 

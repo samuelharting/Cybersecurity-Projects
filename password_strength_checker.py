@@ -11,7 +11,7 @@ Scoring System:
   * Numbers (0-9)
   * Special characters (!@#$%^&*()_+-=[]{}|;:,.<>?)
 
-Total Score: 0-10 scale
+Total Score: 0-7 scale
 """
 
 import re
@@ -66,14 +66,14 @@ def check_password_strength(password):
     else:
         details.append("No special characters: +0 points")
     
-    # 3. Determine strength level based on score
-    if score >= 8:
+    # 3. Determine strength level based on score (max possible is 7)
+    if score >= 7:
         strength_level = "Very Strong"
-    elif score >= 6:
+    elif score >= 5:
         strength_level = "Strong"
-    elif score >= 4:
+    elif score >= 3:
         strength_level = "Moderate"
-    elif score >= 2:
+    elif score >= 1:
         strength_level = "Weak"
     else:
         strength_level = "Very Weak"
@@ -86,7 +86,7 @@ def display_results(password, score, strength_level, details):
     print("PASSWORD STRENGTH ANALYSIS")
     print("="*50)
     print(f"Password: {'*' * len(password)}")  # Hide actual password
-    print(f"Score: {score}/10")
+    print(f"Score: {score}/7")
     print(f"Strength: {strength_level}")
     print("\nDetailed Breakdown:")
     for detail in details:
@@ -114,7 +114,7 @@ def get_security_recommendations(score):
 def main():
     """Main function to run the password strength checker."""
     print("🔒 Password Strength Checker")
-    print("This tool evaluates password security on a 0-10 scale")
+    print("This tool evaluates password security on a 0-7 scale")
     print("Note: Your password will not be stored or transmitted\n")
     
     while True:

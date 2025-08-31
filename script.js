@@ -63,6 +63,24 @@ class PasswordStrengthChecker {
                 this.resetAnalysis();
             }
         });
+
+        // Example password buttons
+        document.querySelectorAll('.example-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const password = btn.dataset.password;
+                this.setPassword(password);
+            });
+        });
+
+        // Clear password button
+        document.getElementById('clear-password-btn').addEventListener('click', () => {
+            this.setPassword('');
+        });
+
+        // Random test button
+        document.getElementById('generate-random-btn').addEventListener('click', () => {
+            this.generateRandomTest();
+        });
     }
 
     analyzePassword(password) {
@@ -133,15 +151,15 @@ class PasswordStrengthChecker {
         }
         criteria.special = { passed: hasSpecial, points: hasSpecial ? 1 : 0, max: 1 };
 
-        // 3. Determine strength level based on score
+        // 3. Determine strength level based on score (max possible is 7)
         let strengthLevel;
-        if (score >= 8) {
+        if (score >= 7) {
             strengthLevel = "very-strong";
-        } else if (score >= 6) {
+        } else if (score >= 5) {
             strengthLevel = "strong";
-        } else if (score >= 4) {
+        } else if (score >= 3) {
             strengthLevel = "moderate";
-        } else if (score >= 2) {
+        } else if (score >= 1) {
             strengthLevel = "weak";
         } else {
             strengthLevel = "very-weak";
@@ -200,7 +218,7 @@ class PasswordStrengthChecker {
     }
 
     updateDisplay(score, strengthLevel, details) {
-        this.scoreValue.textContent = `${score}/10`;
+        this.scoreValue.textContent = `${score}/7`;
         
         const strengthText = this.getStrengthText(strengthLevel);
         this.strengthLevel.textContent = strengthText;
@@ -280,7 +298,7 @@ class PasswordStrengthChecker {
     }
 
     updateProgressBar(score) {
-        const percentage = (score / 10) * 100;
+        const percentage = (score / 7) * 100;
         this.progressBar.style.width = `${percentage}%`;
     }
 
@@ -342,6 +360,36 @@ class PasswordStrengthChecker {
 
         // Reset recommendations
         this.recommendationsList.innerHTML = '<li>Enter a password to see personalized recommendations</li>';
+    }
+
+    setPassword(password) {
+        this.passwordInput.value = password;
+        this.passwordInput.focus();
+        this.analyzePassword(password);
+        
+        // Add a subtle animation to show the password was set
+        this.passwordInput.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            this.passwordInput.style.transform = 'scale(1)';
+        }, 200);
+    }
+
+    generateRandomTest() {
+        const randomExamples = [
+            "abc123",           // Weak
+            "MySecret2024!",    // Very Strong
+            "hello",            // Very Weak
+            "PASSWORD123",      // Moderate
+            "p@ssW0rd!",        // Strong
+            "SuperSecurePass9#", // Very Strong
+            "123456789",        // Weak
+            "StrongPassword1@", // Very Strong
+            "weakpass",         // Very Weak
+            "Moderate1",        // Moderate
+        ];
+        
+        const randomPassword = randomExamples[Math.floor(Math.random() * randomExamples.length)];
+        this.setPassword(randomPassword);
     }
 }
 
