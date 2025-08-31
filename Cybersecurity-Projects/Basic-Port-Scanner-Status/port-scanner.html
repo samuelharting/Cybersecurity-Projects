@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Port Scanner Status Checker</title>
+    <style>
+        /* Modern cybersecurity-themed styling */
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #00ff41;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+
+        button {
+            background: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #00cc33 0%, #009926 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+        }
+
+        button:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            margin-top: 25px;
+        }
+
+        .results h3 {
+            color: #00ff41;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #00ff41;
+            padding-bottom: 5px;
+        }
+
+        .port-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            border-left: 4px solid transparent;
+        }
+
+        .port-result.open {
+            border-left-color: #00ff41;
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .port-result.closed {
+            border-left-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .port-result.filtered {
+            border-left-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .port-number {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .port-service {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .status.open {
+            background: #00ff41;
+            color: #000;
+        }
+
+        .status.closed {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .status.filtered {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .loading {
+            text-align: center;
+            color: #00ff41;
+            font-style: italic;
+        }
+
+        .error {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ff4444;
+            margin-top: 15px;
+        }
+
+        .scan-info {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #00ff41;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* Styling for example IP buttons */
+        .examples-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .examples-section label {
+            display: block;
+            margin-bottom: 10px;
+            color: #00ff41;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .example-btn {
+            background: rgba(0, 0, 0, 0.6);
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .example-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: #00ff88;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 255, 65, 0.2);
+        }
+
+        .example-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 255, 65, 0.2);
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 600px) {
+            .example-buttons {
+                flex-direction: column;
+            }
+            
+            .example-btn {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Port Scanner Status Checker</h1>
+        
+        <!-- Input section for IP address -->
+        <div class="input-section">
+            <label for="ipAddress">Target IP:</label>
+            <input type="text" id="ipAddress" placeholder="Enter IP address (e.g., 192.168.1.1)" value="192.168.1.1">
+            <button onclick="scanPorts()">Scan Ports</button>
+        </div>
+
+        <!-- Quick example IP addresses -->
+        <div class="examples-section">
+            <label>Quick Examples:</label>
+            <div class="example-buttons">
+                <button class="example-btn" onclick="setIP('192.168.1.1')" title="Common home router IP">🏠 192.168.1.1</button>
+                <button class="example-btn" onclick="setIP('10.0.0.1')" title="Enterprise network gateway">🏢 10.0.0.1</button>
+                <button class="example-btn" onclick="setIP('172.16.0.1')" title="Private network range">🔒 172.16.0.1</button>
+                <button class="example-btn" onclick="setIP('8.8.8.8')" title="Google DNS server">🌐 8.8.8.8</button>
+                <button class="example-btn" onclick="setIP('127.0.0.1')" title="Localhost/loopback">💻 127.0.0.1</button>
+            </div>
+        </div>
+
+        <!-- Results display area -->
+        <div class="results" id="results" style="display: none;">
+            <h3>Port Scan Results</h3>
+            <div class="scan-info" id="scanInfo"></div>
+            <div id="portResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Common ports with their associated services for realistic simulation
+        const commonPorts = [
+            { port: 22, service: "SSH", description: "Secure Shell" },
+            { port: 80, service: "HTTP", description: "Web Server" },
+            { port: 443, service: "HTTPS", description: "Secure Web Server" },
+            { port: 21, service: "FTP", description: "File Transfer Protocol" },
+            { port: 25, service: "SMTP", description: "Email Server" }
+        ];
+
+        // Function to validate IP address format
+        function isValidIP(ip) {
+            const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            return ipRegex.test(ip);
+        }
+
+        // Function to generate random but realistic port statuses
+        function generatePortStatus(port, targetIP) {
+            // Create pseudo-realistic results based on both port number and IP
+            // Use different multipliers for each IP to ensure uniqueness
+            const ipMultipliers = {
+                '192.168.1.1': 7,
+                '10.0.0.1': 13, 
+                '172.16.0.1': 19,
+                '8.8.8.8': 23,
+                '127.0.0.1': 29
+            };
+            const multiplier = ipMultipliers[targetIP] || 999;
+            const seed = (port * 17 + multiplier * 23) % 100;
+            const random = seed / 100;
+            
+            // Common ports are more likely to be open
+            if (port === 80 || port === 443) {
+                return random < 0.7 ? 'open' : 'closed';
+            } else if (port === 22) {
+                return random < 0.4 ? 'open' : 'closed';
+            } else {
+                return random < 0.3 ? 'open' : random < 0.8 ? 'closed' : 'filtered';
+            }
+        }
+
+        // Main port scanning function
+        async function scanPorts() {
+            const ipInput = document.getElementById('ipAddress');
+            const resultsDiv = document.getElementById('results');
+            const portResultsDiv = document.getElementById('portResults');
+            const scanInfoDiv = document.getElementById('scanInfo');
+            const scanButton = document.querySelector('button:not(.example-btn)');
+
+            // Get and validate IP address
+            const targetIP = ipInput.value.trim();
+            
+            if (!targetIP) {
+                showError('Please enter an IP address');
+                return;
+            }
+
+            if (!isValidIP(targetIP)) {
+                showError('Please enter a valid IP address (e.g., 192.168.1.1)');
+                return;
+            }
+
+            // Start scanning process
+            scanButton.disabled = true;
+            scanButton.textContent = 'Scanning...';
+            resultsDiv.style.display = 'block';
+            portResultsDiv.innerHTML = '<div class="loading">🔄 Scanning ports...</div>';
+            
+            // Display scan information
+            scanInfoDiv.innerHTML = `
+                <strong>Target:</strong> ${targetIP}<br>
+                <strong>Ports:</strong> ${commonPorts.map(p => p.port).join(', ')}<br>
+                <strong>Scan Type:</strong> TCP Connect Scan (Simulated)
+            `;
+
+            try {
+                // Simulate scanning delay for realism
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Generate results for each port
+                const results = commonPorts.map(portInfo => ({
+                    ...portInfo,
+                    status: generatePortStatus(portInfo.port, targetIP)
+                }));
+
+                // Display results
+                displayResults(results);
+
+            } catch (error) {
+                showError('Scan failed: ' + error.message);
+            } finally {
+                // Re-enable scan button
+                scanButton.disabled = false;
+                scanButton.textContent = 'Scan Ports';
+            }
+        }
+
+        // Function to display scan results
+        function displayResults(results) {
+            const portResultsDiv = document.getElementById('portResults');
+            
+            let html = '';
+            results.forEach(result => {
+                html += `
+                    <div class="port-result ${result.status}">
+                        <div>
+                            <span class="port-number">${result.port}/${result.service}</span>
+                            <div class="port-service">${result.description}</div>
+                        </div>
+                        <span class="status ${result.status}">${result.status.toUpperCase()}</span>
+                    </div>
+                `;
+            });
+
+            portResultsDiv.innerHTML = html;
+
+            // Add summary
+            const openCount = results.filter(r => r.status === 'open').length;
+            const closedCount = results.filter(r => r.status === 'closed').length;
+            const filteredCount = results.filter(r => r.status === 'filtered').length;
+
+            portResultsDiv.innerHTML += `
+                <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; text-align: center;">
+                    <strong>Summary:</strong> ${openCount} Open, ${closedCount} Closed, ${filteredCount} Filtered
+                </div>
+            `;
+        }
+
+        // Function to display error messages
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            const portResultsDiv = document.getElementById('portResults');
+            
+            resultsDiv.style.display = 'block';
+            portResultsDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+        }
+
+        // Function to set IP address from example buttons
+        function setIP(ipAddress) {
+            const ipInput = document.getElementById('ipAddress');
+            ipInput.value = ipAddress;
+            
+            // Add visual feedback
+            ipInput.style.backgroundColor = 'rgba(0, 255, 65, 0.2)';
+            setTimeout(() => {
+                ipInput.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            }, 300);
+            
+            // Focus the input field
+            ipInput.focus();
+        }
+
+        // Allow Enter key to trigger scan
+        document.getElementById('ipAddress').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scanPorts();
+            }
+        });
+
+        // Initialize with example on page load
+        window.addEventListener('load', function() {
+            console.log('Port Scanner Status Checker loaded successfully');
+            console.log('This is a simulation tool for educational purposes only');
+        });
+    </script>
+</body>
+</html>
