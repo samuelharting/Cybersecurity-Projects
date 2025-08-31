@@ -1,0 +1,12 @@
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "secretPassword123",
+  "data": {
+    "account_number": "1234567890",
+    "balance": 5000.50,
+    "transactions": ["buy", "sell", "transfer"]
+  },
+  "special_chars": "!@#$%^&*()",
+  "unicode": "Testing émojis 🔐🛡️💻"
+}

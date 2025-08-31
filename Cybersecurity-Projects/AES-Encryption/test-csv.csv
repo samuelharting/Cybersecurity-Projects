@@ -1,0 +1,5 @@
+Name,Email,Password,Account
+John Doe,john@example.com,myPassword123,ACC001
+Jane Smith,jane@example.com,securePass456,ACC002
+Bob Johnson,bob@example.com,strongPwd789,ACC003
+"Alice, Cooper",alice@example.com,P@ssw0rd!,ACC004

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES File Encryption Tool</title>
+    <!-- CryptoJS Library for AES Encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        /* Modern, clean styling for the encryption tool */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .file-drop-zone {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.dragover {
+            background: #e8edff;
+            border-color: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .drop-text {
+            font-size: 1.1em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .file-info {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .encrypt-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .encrypt-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .decrypt-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .decrypt-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .example-btn {
+            background: #FF9800;
+            color: white;
+        }
+
+        .example-btn:hover {
+            background: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .copy-btn {
+            background: #9C27B0;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #7B1FA2;
+            transform: translateY(-2px);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .example-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            hover-effect: transform;
+        }
+
+        .example-card:hover {
+            background: #e3f2fd;
+            border-color: #2196F3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
+        }
+
+        .example-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .example-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .paste-area {
+            background: #f0f8ff;
+            border: 2px dashed #2196F3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            text-align: center;
+            color: #2196F3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .paste-area:hover {
+            background: #e3f2fd;
+            border-color: #1976D2;
+        }
+
+        .copy-samples {
+            display: grid;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .sample-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .sample-header {
+            background: #e9ecef;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .sample-title {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .copy-sample-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .copy-sample-btn:hover {
+            background: #218838;
+        }
+
+        .sample-content {
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #495057;
+            background: white;
+            border: 2px dashed transparent;
+            transition: all 0.3s ease;
+            cursor: text;
+            user-select: all;
+        }
+
+        .sample-content:hover {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .quick-start-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .quick-start-btn {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .quick-start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            background: linear-gradient(145deg, #45a049, #4CAF50);
+        }
+
+        .quick-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .quick-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .quick-desc {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .instruction-box {
+            background: #e8f5e8;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+            color: #2e7d32;
+        }
+
+        .manual-copy-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+
+        .copy-instructions {
+            color: #495057;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .copyable-text {
+            background: #fff;
+            border: 2px dashed #007bff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: all;
+        }
+
+        .copyable-text:hover {
+            background: #f0f8ff;
+            border-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .copyable-text:active {
+            background: #e6f3ff;
+        }
+
+        .password-explanation {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .explanation-header {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .explanation-content {
+            color: #856404;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .password-examples {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #495057;
+        }
+
+        .example-password {
+            background: #007bff;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: background 0.2s ease;
+        }
+
+        .example-password:hover {
+            background: #0056b3;
+        }
+
+        .troubleshooting-box {
+            background: #f8f9fa;
+            border: 2px solid #6c757d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .trouble-header {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .trouble-content {
+            color: #6c757d;
+        }
+
+        .trouble-item {
+            padding: 5px 0;
+            line-height: 1.4;
+        }
+
+        .result-section {
+            margin-top: 25px;
+        }
+
+        .result-box {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #1976D2;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 AES File Encryption Tool</h1>
+        <p class="subtitle">Secure file encryption using Advanced Encryption Standard</p>
+        
+        <!-- Information Box -->
+        <div class="info-box">
+            <h3>How to Use:</h3>
+            <p>1. Upload a text file or use the example text<br>
+               2. Enter a password for encryption/decryption<br>
+               3. Click Encrypt to secure your content or Decrypt to reveal it<br>
+               4. The result will appear below</p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="input-section">
+            <label for="fileInput">Upload Text File or Paste Content:</label>
+            <div class="file-drop-zone" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" class="file-input" accept=".txt,.csv,.json,.xml,.log">
+                <div class="drop-text">📁 Click to browse or drag & drop your file here</div>
+                <div class="file-info">Supported formats: .txt, .csv, .json, .xml, .log</div>
+            </div>
+            
+            <!-- Paste Area -->
+            <div class="paste-area" id="pasteArea" contenteditable="true" placeholder="Or paste/type your text content directly here...">
+                Click here to paste or type text directly...
+            </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-section">
+            <label for="passwordInput">🔑 Encryption Password (This is YOUR secret key!):</label>
+            <input type="password" id="passwordInput" placeholder="Type any password you want - like 'mypassword123'">
+            <div class="password-explanation">
+                <div class="explanation-header">🤔 How This Works:</div>
+                <div class="explanation-content">
+                    <strong>Encryption:</strong> Your password + your text = scrambled text that nobody can read<br>
+                    <strong>Decryption:</strong> Same password + scrambled text = your original text back<br>
+                    <strong>⚠️ Important:</strong> You MUST remember this password to decrypt your text later!
+                </div>
+                <div class="password-examples">
+                    <strong>👆 The buttons above automatically fill in passwords for you!</strong><br>
+                    Or type your own like: <span class="example-password" onclick="setPassword('test123')">test123</span>, 
+                    <span class="example-password" onclick="setPassword('mypassword')">mypassword</span>, or 
+                    <span class="example-password" onclick="setPassword('secret456')">secret456</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start Examples -->
+        <div class="input-section">
+            <label>🚀 Easy Testing - Just Click Any Button Below:</label>
+            <div class="quick-start-grid">
+                <div class="quick-start-item">
+                    <button class="quick-start-btn" onclick="quickStart('simple')">
+                        <div class="quick-icon">🟢</div>
+                        <div class="quick-title">BEGINNER</div>
+                        <div class="quick-desc">Start Here!</div>
+                    </button>
+                </div>
+                <div class="quick-start-item">
+                    <button class="quick-start-btn" onclick="quickStart('personal')">
+                        <div class="quick-icon">👤</div>
+                        <div class="quick-title">PERSONAL</div>
+                        <div class="quick-desc">Names & Passwords</div>
+                    </button>
+                </div>
+                <div class="quick-start-item">
+                    <button class="quick-start-btn" onclick="quickStart('business')">
+                        <div class="quick-icon">💼</div>
+                        <div class="quick-title">BUSINESS</div>
+                        <div class="quick-desc">API Keys & Data</div>
+                    </button>
+                </div>
+            </div>
+            <div class="instruction-box">
+                <strong>👆 Click any button above to instantly load example content!</strong><br>
+                Then scroll down and click "🔒 Encrypt" to see it work!
+            </div>
+        </div>
+
+        <!-- Manual Copy Section -->
+        <div class="input-section" style="margin-top: 30px;">
+            <label>📋 Or Copy This Text and Paste Below:</label>
+            <div class="manual-copy-box">
+                <div class="copy-instructions">
+                    <strong>Step 1:</strong> Select and copy this text ↓
+                </div>
+                <div class="copyable-text" onclick="selectAllText(this)">My secret message that needs encryption!
+Username: testuser
+Password: supersecret123
+Credit Card: 1234-5678-9012-3456</div>
+                <div class="copy-instructions">
+                    <strong>Step 2:</strong> Paste it in the blue box below, then click Encrypt!
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="button-group">
+            <button class="encrypt-btn" onclick="encryptContent()">🔒 Encrypt</button>
+            <button class="decrypt-btn" onclick="decryptContent()">🔓 Decrypt</button>
+            <button class="copy-btn" onclick="copyResult()">📋 Copy Result</button>
+            <button class="clear-btn" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+
+        <!-- Troubleshooting Help -->
+        <div class="troubleshooting-box">
+            <div class="trouble-header">🔧 Having trouble with Decrypt? Check this:</div>
+            <div class="trouble-content">
+                <div class="trouble-item">✅ <strong>Step 1:</strong> Load some text (click green buttons above or paste text)</div>
+                <div class="trouble-item">✅ <strong>Step 2:</strong> Enter a password and click "🔒 Encrypt" first</div>
+                <div class="trouble-item">✅ <strong>Step 3:</strong> Use the SAME password and click "🔓 Decrypt"</div>
+                <div class="trouble-item">⚠️ <strong>Common issue:</strong> Different password = decryption fails!</div>
+            </div>
+        </div>
+
+        <!-- Result Display -->
+        <div class="result-section">
+            <label>Result:</label>
+            <div id="resultBox" class="result-box">No content processed yet. Upload a file and click Encrypt or Decrypt.</div>
+            <div id="statusMessage" class="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables to store file content and current state
+        let currentContent = '';
+        let isEncrypted = false;
+
+        // Initialize drag and drop functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDragDrop();
+            initializePasteArea();
+            
+            // File input change handler
+            document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+        });
+
+        /**
+         * Initialize drag and drop functionality for the file drop zone
+         */
+        function initializeDragDrop() {
+            const dropZone = document.querySelector('.file-drop-zone');
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop zone when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            dropZone.addEventListener('drop', handleDrop, false);
+        }
+
+        /**
+         * Prevent default drag and drop behaviors
+         */
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        /**
+         * Add visual feedback when dragging over drop zone
+         */
+        function highlight(e) {
+            document.querySelector('.file-drop-zone').classList.add('dragover');
+        }
+
+        /**
+         * Remove visual feedback when not dragging over drop zone
+         */
+        function unhighlight(e) {
+            document.querySelector('.file-drop-zone').classList.remove('dragover');
+        }
+
+        /**
+         * Handle file drop event
+         */
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            // Check if files were dropped
+            if (files.length > 0) {
+                processFile(files[0]);
+            } else {
+                // Check if text was dropped
+                const text = dt.getData('text/plain');
+                if (text) {
+                    currentContent = text;
+                    isEncrypted = false;
+                    document.getElementById('resultBox').textContent = currentContent;
+                    document.getElementById('pasteArea').textContent = currentContent;
+                    showStatus('Text content loaded from drag & drop!', 'success');
+                    
+                    // Update drop zone text
+                    const dropText = document.querySelector('.drop-text');
+                    dropText.textContent = '📁 Text content loaded via drag & drop';
+                }
+            }
+        }
+
+        /**
+         * Handle file selection from input
+         */
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processFile(file);
+            }
+        }
+
+        /**
+         * Process the selected file and read its content
+         */
+        function processFile(file) {
+            // Validate file type
+            const allowedTypes = ['text/plain', 'text/csv', 'application/json', 'text/xml', 'text/log'];
+            const fileName = file.name.toLowerCase();
+            const isValidType = allowedTypes.some(type => file.type === type) || 
+                              fileName.endsWith('.txt') || fileName.endsWith('.csv') || 
+                              fileName.endsWith('.json') || fileName.endsWith('.xml') || 
+                              fileName.endsWith('.log');
+
+            if (!isValidType) {
+                showStatus('Please select a valid text file (.txt, .csv, .json, .xml, .log)', 'error');
+                return;
+            }
+
+            // Read file content
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentContent = e.target.result;
+                isEncrypted = false;
+                document.getElementById('resultBox').textContent = currentContent;
+                showStatus(`File "${file.name}" loaded successfully!`, 'success');
+                
+                // Update drop zone text
+                const dropText = document.querySelector('.drop-text');
+                dropText.textContent = `📁 File loaded: ${file.name}`;
+            };
+            
+            reader.onerror = function() {
+                showStatus('Error reading file. Please try again.', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+
+        /**
+         * Encrypt the current content using AES encryption
+         */
+        function encryptContent() {
+            const password = document.getElementById('passwordInput').value;
+            
+            // Validation
+            if (!currentContent) {
+                showStatus('Please upload a file or load example content first.', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showStatus('Please enter a password for encryption.', 'error');
+                return;
+            }
+
+            try {
+                // Use CryptoJS to encrypt the content with AES
+                const encrypted = CryptoJS.AES.encrypt(currentContent, password).toString();
+                
+                // Update the display
+                document.getElementById('resultBox').textContent = encrypted;
+                isEncrypted = true;
+                
+                showStatus('Content encrypted successfully! 🔒', 'success');
+            } catch (error) {
+                showStatus('Encryption failed: ' + error.message, 'error');
+            }
+        }
+
+        /**
+         * Decrypt the current content using AES decryption
+         */
+        function decryptContent() {
+            const password = document.getElementById('passwordInput').value;
+            const encryptedContent = document.getElementById('resultBox').textContent;
+            
+            // Validation
+            if (!encryptedContent || encryptedContent === 'No content processed yet. Upload a file and click Encrypt or Decrypt.') {
+                showStatus('❌ No encrypted content to decrypt! First click "🔒 Encrypt" to create encrypted text.', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showStatus('❌ Please enter the password for decryption! Use the same password you used to encrypt.', 'error');
+                return;
+            }
+
+            // Show what we're trying to decrypt (helpful for debugging)
+            console.log('Trying to decrypt:', encryptedContent.substring(0, 50) + '...');
+            console.log('Using password:', password);
+
+            try {
+                // Use CryptoJS to decrypt the content
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedContent, password);
+                const decrypted = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                
+                if (!decrypted || decrypted.trim() === '') {
+                    throw new Error('Invalid password or corrupted data');
+                }
+                
+                // Update the display
+                document.getElementById('resultBox').textContent = decrypted;
+                document.getElementById('pasteArea').textContent = decrypted;
+                currentContent = decrypted;
+                isEncrypted = false;
+                
+                showStatus('✅ Content decrypted successfully! 🔓 Your original text is now visible.', 'success');
+            } catch (error) {
+                showStatus('❌ Decryption failed! Make sure you\'re using the exact same password you used to encrypt. Try typing it again carefully.', 'error');
+                console.log('Decryption error:', error);
+            }
+        }
+
+        /**
+         * Initialize paste area functionality
+         */
+        function initializePasteArea() {
+            const pasteArea = document.getElementById('pasteArea');
+            
+            pasteArea.addEventListener('focus', function() {
+                if (this.textContent === 'Click here to paste or type text directly...') {
+                    this.textContent = '';
+                }
+            });
+            
+            pasteArea.addEventListener('blur', function() {
+                if (this.textContent.trim() === '') {
+                    this.textContent = 'Click here to paste or type text directly...';
+                }
+            });
+            
+            pasteArea.addEventListener('input', function() {
+                const content = this.textContent.trim();
+                if (content && content !== 'Click here to paste or type text directly...') {
+                    currentContent = content;
+                    isEncrypted = false;
+                    document.getElementById('resultBox').textContent = currentContent;
+                    showStatus('Content loaded from paste area!', 'success');
+                    
+                    // Update drop zone text
+                    const dropText = document.querySelector('.drop-text');
+                    dropText.textContent = '📁 Content loaded from paste area';
+                }
+            });
+        }
+
+        /**
+         * Load example content for demonstration
+         */
+        function loadExample(type = 'simple') {
+            let exampleText = '';
+            let suggestedPassword = '';
+            
+            switch(type) {
+                case 'personal':
+                    exampleText = `PERSONAL INFORMATION - CONFIDENTIAL
+
+Full Name: John Michael Smith
+Email: john.smith@email.com
+Phone: +1 (555) 123-4567
+Address: 123 Main Street, Anytown, ST 12345
+
+Login Credentials:
+- Username: johnsmith2024
+- Password: MySecureP@ssw0rd123!
+- Security Question: What was your first pet's name?
+- Answer: Fluffy
+
+Social Security: 123-45-6789
+Date of Birth: January 15, 1990
+
+Emergency Contact:
+Name: Jane Smith (Wife)
+Phone: +1 (555) 765-4321
+
+This information should be encrypted before storage!`;
+                    suggestedPassword = 'Personal123!';
+                    break;
+                    
+                case 'financial':
+                    exampleText = `FINANCIAL DATA - HIGHLY CONFIDENTIAL
+
+Bank Account Information:
+Account Number: 1234567890123456
+Routing Number: 987654321
+Bank: First National Bank
+Account Type: Checking
+
+Credit Cards:
+1. Visa: 4532-1234-5678-9012
+   Expiry: 12/27, CVV: 456
+   
+2. MasterCard: 5555-4444-3333-2222
+   Expiry: 08/26, CVV: 789
+
+Investment Accounts:
+Brokerage Account: INV-789456123
+401k Account: RET-456123789
+
+Total Assets: $125,750.00
+Monthly Income: $8,500.00
+
+PIN Codes:
+ATM PIN: 9876
+Credit Card PIN: 4321
+
+WARNING: This data requires maximum security!`;
+                    suggestedPassword = 'Finance2024$';
+                    break;
+                    
+                case 'business':
+                    exampleText = `BUSINESS CREDENTIALS - RESTRICTED ACCESS
+
+Company: TechCorp Solutions Ltd.
+Department: IT Security
+
+API Keys & Tokens:
+- AWS Access Key: AKIA_FAKE_EXAMPLE_123456
+- AWS Secret: wJalr_FAKE_EXAMPLE_SECRET_KEY
+- Stripe API Key: sk_test_FAKE1234567890abcdefghijklmnop
+- Google Cloud Token: ya29.AHES6ZRVmB7fkLtd1XTm...
+
+Database Connections:
+Production DB: prod-db.company.com:5432
+Username: db_admin
+Password: Pr0d_DB_P@ssw0rd_2024!
+
+Server Access:
+SSH Key: ~/.ssh/production_key
+Server IP: 192.168.1.100
+Username: sysadmin
+
+OAuth Credentials:
+Client ID: 123456789012-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com
+Client Secret: GOCSPX-1234567890abcdefghijklmnop
+
+These credentials provide full system access!`;
+                    suggestedPassword = 'Business@2024';
+                    break;
+                    
+                default: // simple
+                    exampleText = `Hello World! 
+
+This is a simple text example for testing the AES encryption tool.
+
+Features to test:
+✓ Basic text encryption
+✓ Special characters: !@#$%^&*()
+✓ Numbers: 123456789
+✓ Multiple lines
+✓ Unicode: 🔐 🔑 🛡️
+
+Date: ${new Date().toLocaleString()}
+
+This is perfect for beginners to understand how AES encryption works!`;
+                    suggestedPassword = 'Hello123';
+                    break;
+            }
+
+            currentContent = exampleText;
+            isEncrypted = false;
+            document.getElementById('resultBox').textContent = currentContent;
+            document.getElementById('pasteArea').textContent = currentContent;
+            
+            // Update drop zone text
+            const dropText = document.querySelector('.drop-text');
+            dropText.textContent = `📁 ${type.charAt(0).toUpperCase() + type.slice(1)} example loaded`;
+            
+            // Suggest example password
+            document.getElementById('passwordInput').value = suggestedPassword;
+            
+            showStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} example loaded! Try password "${suggestedPassword}" for testing.`, 'success');
+        }
+
+        /**
+         * Quick start function that loads content and shows clear next steps
+         */
+        function quickStart(type) {
+            // Load the example content
+            loadExample(type);
+            
+            // Show a clear message about what to do next
+            setTimeout(() => {
+                showStatus(`✅ Content loaded! Now scroll down and click the green "🔒 Encrypt" button to see the magic happen!`, 'success');
+            }, 500);
+            
+            // Scroll to the encrypt button area
+            setTimeout(() => {
+                document.querySelector('.button-group').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 1000);
+        }
+
+        /**
+         * Set a password example when clicked
+         */
+        function setPassword(password) {
+            document.getElementById('passwordInput').value = password;
+            showStatus(`Password set to "${password}"! Now you can encrypt or decrypt with this password. 🔑`, 'success');
+        }
+
+        /**
+         * Select all text in an element when clicked
+         */
+        function selectAllText(element) {
+            if (window.getSelection) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                showStatus('📋 Text selected! Now copy it (Ctrl+C) and paste in the blue area below.', 'success');
+            }
+        }
+
+        /**
+         * Copy sample text to clipboard
+         */
+        function copySampleText(type) {
+            let sampleText = '';
+            
+            switch(type) {
+                case 'business':
+                    sampleText = `API Key: sk_test_FAKE12345abcdef
+Database: prod-server.com
+Username: admin
+Password: SecureP@ss123!`;
+                    break;
+                case 'personal':
+                    sampleText = `Name: John Smith
+Email: john@email.com
+Phone: 555-123-4567
+Password: MySecret123!`;
+                    break;
+                case 'simple':
+                default:
+                    sampleText = `Hello World! This is a test message.
+Special chars: !@#$%^&*()
+Numbers: 123456789
+Try encrypting this! 🔐`;
+                    break;
+            }
+            
+            // Use the modern Clipboard API if available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(sampleText).then(() => {
+                    showStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} sample copied! Now paste it in the blue area below. 📋`, 'success');
+                }).catch(err => {
+                    // Fallback for older browsers
+                    fallbackCopyTextToClipboard(sampleText);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(sampleText);
+            }
+        }
+
+        /**
+         * Copy the result content to clipboard
+         */
+        function copyResult() {
+            const resultBox = document.getElementById('resultBox');
+            const content = resultBox.textContent;
+            
+            if (!content || content === 'No content processed yet. Upload a file and click Encrypt or Decrypt.') {
+                showStatus('No content to copy!', 'error');
+                return;
+            }
+            
+            // Use the modern Clipboard API if available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(content).then(() => {
+                    showStatus('Content copied to clipboard! 📋', 'success');
+                }).catch(err => {
+                    // Fallback for older browsers
+                    fallbackCopyTextToClipboard(content);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(content);
+            }
+        }
+
+        /**
+         * Fallback copy method for older browsers
+         */
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showStatus('Content copied to clipboard! 📋', 'success');
+                } else {
+                    showStatus('Copy failed. Please copy manually.', 'error');
+                }
+            } catch (err) {
+                showStatus('Copy not supported. Please copy manually.', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        /**
+         * Clear all content and reset the interface
+         */
+        function clearAll() {
+            currentContent = '';
+            isEncrypted = false;
+            document.getElementById('resultBox').textContent = 'No content processed yet. Upload a file and click Encrypt or Decrypt.';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('pasteArea').textContent = 'Click here to paste or type text directly...';
+            
+            // Reset drop zone text
+            const dropText = document.querySelector('.drop-text');
+            dropText.textContent = '📁 Click to browse or drag & drop your file here';
+            
+            // Hide status message
+            document.getElementById('statusMessage').style.display = 'none';
+        }
+
+        /**
+         * Display status messages to the user
+         */
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+            statusElement.style.display = 'block';
+            
+            // Auto-hide success messages after 3 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Keyboard shortcuts for power users
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+E for encrypt
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                encryptContent();
+            }
+            // Ctrl+D for decrypt  
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                decryptContent();
+            }
+            // Ctrl+L for load example
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                loadExample();
+            }
+        });
+    </script>
+</body>
+</html>

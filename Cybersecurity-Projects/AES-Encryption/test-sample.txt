@@ -1,0 +1,10 @@
+This is a test file for the AES encryption tool.
+
+It contains multiple lines of text to verify that:
+- File reading works correctly
+- Encryption preserves all content including line breaks
+- Decryption restores the original formatting
+
+Test data: 12345
+Special characters: !@#$%^&*()
+Unicode: émojis 🔐 work too!
