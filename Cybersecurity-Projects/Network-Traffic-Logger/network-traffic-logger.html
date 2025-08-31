@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Traffic Logger - Cybersecurity Tool</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header .icon {
+            font-size: 1.2em;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Traffic Display */
+        .traffic-display {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .packet {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .packet:hover {
+            transform: translateX(5px);
+        }
+
+        .packet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .packet-id {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .packet-time {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .packet-details {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            color: #34495e;
+        }
+
+        .protocol-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .http { background: #e8f5e8; color: #27ae60; }
+        .https { background: #e8f4fd; color: #3498db; }
+        .tcp { background: #fff3cd; color: #856404; }
+        .udp { background: #f8d7da; color: #721c24; }
+
+        /* Input Section */
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .example-data {
+            background: #e8f4fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .example-data code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        #packetInput {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        #packetInput:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        #packetInput.drag-over {
+            border-color: #27ae60;
+            background-color: #e8f5e8;
+        }
+
+        .drop-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #7f8c8d;
+            pointer-events: none;
+            font-style: italic;
+        }
+
+        /* Status Indicator */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status.active .status-dot {
+            background: #28a745;
+        }
+
+        .status.inactive .status-dot {
+            background: #dc3545;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .control-panel {
+                flex-direction: column;
+            }
+            
+            .packet-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>
+                <span class="icon">🔍</span>
+                Network Traffic Logger
+                <span class="icon">📊</span>
+            </h1>
+            <p>Real-time Network Packet Analysis & Monitoring Tool</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Packet Examples Section -->
+            <div class="section">
+                <h2>📋 Packet Format Examples</h2>
+                <div class="input-section">
+                    <div class="example-data">
+                        <strong>Click any "Copy" button to see different network traffic types:</strong>
+                        <br>
+                        <div style="margin: 10px 0;">
+                            <code id="example1">192.168.1.1 -> 10.0.0.1, HTTP, Port: 80, Size: 1024 bytes</code>
+                            <button class="btn btn-secondary" onclick="copyExample(event, 'example1')" style="margin-left: 10px; padding: 3px 8px; font-size: 11px;">
+                                Copy
+                            </button>
+                            <span style="font-size: 0.85em; color: #666; margin-left: 10px;">Web Traffic</span>
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <code id="example2">172.16.0.5 -> 203.0.113.10, SSH, Port: 22, Size: 64 bytes</code>
+                            <button class="btn btn-secondary" onclick="copyExample(event, 'example2')" style="margin-left: 10px; padding: 3px 8px; font-size: 11px;">
+                                Copy
+                            </button>
+                            <span style="font-size: 0.85em; color: #666; margin-left: 10px;">Secure Shell</span>
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <code id="example3">10.0.0.100 -> 8.8.8.8, DNS, Port: 53, Size: 512 bytes</code>
+                            <button class="btn btn-secondary" onclick="copyExample(event, 'example3')" style="margin-left: 10px; padding: 3px 8px; font-size: 11px;">
+                                Copy
+                            </button>
+                            <span style="font-size: 0.85em; color: #666; margin-left: 10px;">DNS Lookup</span>
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <code id="example4">192.168.1.50 -> 151.101.193.140, HTTPS, Port: 443, Size: 2048 bytes</code>
+                            <button class="btn btn-secondary" onclick="copyExample(event, 'example4')" style="margin-left: 10px; padding: 3px 8px; font-size: 11px;">
+                                Copy
+                            </button>
+                            <span style="font-size: 0.85em; color: #666; margin-left: 10px;">Encrypted Web</span>
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <code id="example5">192.168.1.15 -> 239.255.255.250, UDP, Port: 1900, Size: 256 bytes</code>
+                            <button class="btn btn-secondary" onclick="copyExample(event, 'example5')" style="margin-left: 10px; padding: 3px 8px; font-size: 11px;">
+                                Copy
+                            </button>
+                            <span style="font-size: 0.85em; color: #666; margin-left: 10px;">Network Discovery</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-container">
+                        <textarea 
+                            id="packetInput" 
+                            placeholder="Drag and drop packet data here or paste manually..."
+                            ondrop="handleDrop(event)" 
+                            ondragover="handleDragOver(event)"
+                            ondragleave="handleDragLeave(event)">
+                        </textarea>
+                        <div class="drop-hint" id="dropHint">
+                            Drop packet data here
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel Section -->
+            <div class="section">
+                <h2>🎛️ Network Traffic Monitor</h2>
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="startLogging()">Start Logging</button>
+                    <button class="btn btn-danger" onclick="stopLogging()">Stop Logging</button>
+                    <button class="btn btn-secondary" onclick="clearTraffic()">Clear Traffic</button>
+                    <div class="status inactive" id="loggingStatus">
+                        <span class="status-dot"></span>
+                        Status: Inactive
+                    </div>
+                </div>
+            </div>
+
+            <!-- Traffic Display Section -->
+            <div class="section">
+                <h2>📊 Live Network Traffic Log</h2>
+                <div class="traffic-display" id="trafficDisplay">
+                    <p style="text-align: center; color: #7f8c8d; font-style: italic;">
+                        First, try the packet examples above, then click "Start Logging" to see live traffic simulation...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for application state
+        let isLogging = false;
+        let loggingInterval = null;
+        let packetCounter = 0;
+
+        // Mock network traffic data - realistic cybersecurity examples
+        const mockPackets = [
+            {
+                sourceIP: "192.168.1.100",
+                destIP: "8.8.8.8",
+                protocol: "HTTPS",
+                port: 443,
+                size: "1247 bytes",
+                description: "DNS lookup request"
+            },
+            {
+                sourceIP: "10.0.0.15",
+                destIP: "192.168.1.1",
+                protocol: "HTTP",
+                port: 80,
+                size: "2048 bytes",
+                description: "Web server response"
+            },
+            {
+                sourceIP: "172.16.0.5",
+                destIP: "203.0.113.10",
+                protocol: "TCP",
+                port: 22,
+                size: "64 bytes",
+                description: "SSH connection attempt"
+            },
+            {
+                sourceIP: "192.168.1.50",
+                destIP: "239.255.255.250",
+                protocol: "UDP",
+                port: 1900,
+                size: "512 bytes",
+                description: "SSDP multicast"
+            },
+            {
+                sourceIP: "10.0.0.100",
+                destIP: "151.101.193.140",
+                protocol: "HTTPS",
+                port: 443,
+                size: "3072 bytes",
+                description: "Encrypted web traffic"
+            },
+            {
+                sourceIP: "192.168.1.25",
+                destIP: "8.8.8.8",
+                protocol: "UDP",
+                port: 53,
+                size: "128 bytes",
+                description: "DNS query"
+            },
+            {
+                sourceIP: "10.0.0.50",
+                destIP: "192.168.1.254",
+                protocol: "TCP",
+                port: 443,
+                size: "1456 bytes",
+                description: "SSL handshake"
+            },
+            {
+                sourceIP: "172.16.10.5",
+                destIP: "157.240.11.35",
+                protocol: "HTTPS",
+                port: 443,
+                size: "2890 bytes",
+                description: "Social media API call"
+            },
+            {
+                sourceIP: "192.168.1.75",
+                destIP: "13.107.42.14",
+                protocol: "TCP",
+                port: 25,
+                size: "845 bytes",
+                description: "Email SMTP transmission"
+            },
+            {
+                sourceIP: "10.0.0.200",
+                destIP: "224.0.0.251",
+                protocol: "UDP",
+                port: 5353,
+                size: "96 bytes",
+                description: "mDNS service discovery"
+            }
+        ];
+
+        /**
+         * Starts the network traffic logging simulation
+         * Creates periodic updates to simulate real-time packet capture
+         */
+        function startLogging() {
+            if (isLogging) return;
+            
+            isLogging = true;
+            updateStatus(true);
+            
+            // Clear existing traffic display
+            const display = document.getElementById('trafficDisplay');
+            display.innerHTML = '';
+            
+            // Start logging simulation with random intervals (1-3 seconds)
+            function scheduleNextPacket() {
+                if (isLogging) {
+                    const randomPacket = mockPackets[Math.floor(Math.random() * mockPackets.length)];
+                    logPacket(randomPacket);
+                    
+                    // Schedule next packet with new random interval
+                    loggingInterval = setTimeout(scheduleNextPacket, Math.random() * 2000 + 1000);
+                }
+            }
+            
+            // Start the first packet
+            scheduleNextPacket();
+        }
+
+        /**
+         * Stops the network traffic logging simulation
+         */
+        function stopLogging() {
+            isLogging = false;
+            updateStatus(false);
+            
+            if (loggingInterval) {
+                clearTimeout(loggingInterval);
+                loggingInterval = null;
+            }
+        }
+
+        /**
+         * Clears all displayed traffic logs
+         */
+        function clearTraffic() {
+            const display = document.getElementById('trafficDisplay');
+            display.innerHTML = '<p style="text-align: center; color: #7f8c8d; font-style: italic;">Traffic log cleared. Click "Start Logging" to begin monitoring...</p>';
+            packetCounter = 0;
+        }
+
+        /**
+         * Updates the logging status indicator
+         * @param {boolean} active - Whether logging is currently active
+         */
+        function updateStatus(active) {
+            const status = document.getElementById('loggingStatus');
+            if (active) {
+                status.className = 'status active';
+                status.innerHTML = '<span class="status-dot"></span>Status: Active';
+            } else {
+                status.className = 'status inactive';
+                status.innerHTML = '<span class="status-dot"></span>Status: Inactive';
+            }
+        }
+
+        /**
+         * Logs a network packet to the display
+         * @param {Object} packet - Packet data object containing network information
+         */
+        function logPacket(packet) {
+            packetCounter++;
+            const display = document.getElementById('trafficDisplay');
+            
+            // Create packet element with professional styling
+            const packetElement = document.createElement('div');
+            packetElement.className = 'packet';
+            
+            // Generate current timestamp
+            const timestamp = new Date().toLocaleTimeString();
+            
+            // Build packet HTML with security-focused information
+            packetElement.innerHTML = `
+                <div class="packet-header">
+                    <span class="packet-id">Packet #${packetCounter}</span>
+                    <span class="packet-time">${timestamp}</span>
+                </div>
+                <div class="packet-details">
+                    ${packet.sourceIP} → ${packet.destIP}
+                    <span class="protocol-tag ${packet.protocol.toLowerCase()}">${packet.protocol}</span>
+                    <br>
+                    Port: ${packet.port} | Size: ${packet.size} | ${packet.description}
+                </div>
+            `;
+            
+            // Add to top of display (most recent first)
+            display.insertBefore(packetElement, display.firstChild);
+            
+            // Limit display to last 10 packets for performance
+            while (display.children.length > 10) {
+                display.removeChild(display.lastChild);
+            }
+        }
+
+        /**
+         * Copies the example packet format to the input field
+         * Demonstrates packet data structure for educational purposes
+         */
+        function copyExample(event, exampleId = 'example1') {
+            const exampleText = document.getElementById(exampleId).textContent;
+            const input = document.getElementById('packetInput');
+            input.value = exampleText;
+            input.focus();
+            
+            // Visual feedback for successful copy
+            const button = event ? event.target : document.querySelector('.btn-secondary');
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.style.background = '#27ae60';
+            button.style.color = 'white';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+                button.style.color = '';
+            }, 1500);
+        }
+
+        /**
+         * Handles drag over events for the input field
+         * Provides visual feedback during drag operations
+         */
+        function handleDragOver(event) {
+            event.preventDefault();
+            const input = document.getElementById('packetInput');
+            input.classList.add('drag-over');
+            document.getElementById('dropHint').style.display = 'block';
+        }
+
+        /**
+         * Handles drag leave events for the input field
+         * Removes visual feedback when drag leaves the area
+         */
+        function handleDragLeave(event) {
+            event.preventDefault();
+            const input = document.getElementById('packetInput');
+            input.classList.remove('drag-over');
+            document.getElementById('dropHint').style.display = 'none';
+        }
+
+        /**
+         * Handles drop events for the input field
+         * Processes dropped text data and populates the input
+         */
+        function handleDrop(event) {
+            event.preventDefault();
+            const input = document.getElementById('packetInput');
+            input.classList.remove('drag-over');
+            document.getElementById('dropHint').style.display = 'none';
+            
+            // Extract text data from dropped content
+            const droppedText = event.dataTransfer.getData('text/plain');
+            if (droppedText && droppedText.trim()) {
+                input.value = droppedText.trim();
+                input.focus();
+                
+                // Provide user feedback
+                console.log('Packet data successfully dropped and parsed');
+            } else {
+                console.log('No valid text data found in dropped content');
+            }
+        }
+
+        /**
+         * Initialize application on page load
+         * Sets up default state and event listeners
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide drop hint initially
+            document.getElementById('dropHint').style.display = 'none';
+            
+            // Add keyboard shortcuts for power users
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey) {
+                    switch(event.key) {
+                        case 's':
+                            event.preventDefault();
+                            if (isLogging) stopLogging(); else startLogging();
+                            break;
+                        case 'k':
+                            event.preventDefault();
+                            clearTraffic();
+                            break;
+                    }
+                }
+            });
+            
+            console.log('Network Traffic Logger initialized successfully');
+            console.log('Keyboard shortcuts: Ctrl+S (Start/Stop), Ctrl+K (Clear)');
+        });
+    </script>
+</body>
+</html>
