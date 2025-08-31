@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker | Cybersecurity Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>Password Strength Checker</h1>
+                </div>
+                <p class="subtitle">Evaluate your password security in real-time</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="password-checker-card">
+                <div class="input-section">
+                    <label for="password-input" class="input-label">
+                        <i class="fas fa-lock"></i>
+                        Enter Password to Analyze
+                    </label>
+                    <div class="password-input-container">
+                        <input 
+                            type="password" 
+                            id="password-input" 
+                            class="password-input"
+                            placeholder="Type your password here..."
+                            autocomplete="off"
+                        >
+                        <button type="button" id="toggle-visibility" class="toggle-btn" title="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Strength Meter -->
+                <div class="strength-meter-section">
+                    <div class="strength-score">
+                        <span class="score-text">Strength Score: </span>
+                        <span id="score-value" class="score-value">0/10</span>
+                        <span id="strength-level" class="strength-level">Enter password</span>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                    
+                    <div class="strength-indicators">
+                        <div class="indicator-row">
+                            <span class="indicator very-weak">Very Weak</span>
+                            <span class="indicator weak">Weak</span>
+                            <span class="indicator moderate">Moderate</span>
+                            <span class="indicator strong">Strong</span>
+                            <span class="indicator very-strong">Very Strong</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis -->
+                <div class="analysis-section">
+                    <h3 class="analysis-title">
+                        <i class="fas fa-chart-line"></i>
+                        Detailed Analysis
+                    </h3>
+                    
+                    <div class="criteria-grid">
+                        <div class="criteria-item" id="length-criteria">
+                            <div class="criteria-icon">
+                                <i class="fas fa-ruler"></i>
+                            </div>
+                            <div class="criteria-content">
+                                <span class="criteria-label">Length</span>
+                                <span class="criteria-score" id="length-score">0/3 points</span>
+                            </div>
+                            <div class="criteria-status" id="length-status">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+
+                        <div class="criteria-item" id="uppercase-criteria">
+                            <div class="criteria-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="criteria-content">
+                                <span class="criteria-label">Uppercase Letters</span>
+                                <span class="criteria-score" id="uppercase-score">0/1 points</span>
+                            </div>
+                            <div class="criteria-status" id="uppercase-status">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+
+                        <div class="criteria-item" id="lowercase-criteria">
+                            <div class="criteria-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="criteria-content">
+                                <span class="criteria-label">Lowercase Letters</span>
+                                <span class="criteria-score" id="lowercase-score">0/1 points</span>
+                            </div>
+                            <div class="criteria-status" id="lowercase-status">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+
+                        <div class="criteria-item" id="numbers-criteria">
+                            <div class="criteria-icon">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <div class="criteria-content">
+                                <span class="criteria-label">Numbers</span>
+                                <span class="criteria-score" id="numbers-score">0/1 points</span>
+                            </div>
+                            <div class="criteria-status" id="numbers-status">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+
+                        <div class="criteria-item" id="special-criteria">
+                            <div class="criteria-icon">
+                                <i class="fas fa-at"></i>
+                            </div>
+                            <div class="criteria-content">
+                                <span class="criteria-label">Special Characters</span>
+                                <span class="criteria-score" id="special-score">0/1 points</span>
+                            </div>
+                            <div class="criteria-status" id="special-status">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations-section" id="recommendations-section">
+                    <h3 class="recommendations-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Security Recommendations
+                    </h3>
+                    <ul id="recommendations-list" class="recommendations-list">
+                        <li>Enter a password to see personalized recommendations</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Password Strength Checker | Built for Cybersecurity Portfolio</p>
+            <p class="privacy-note">
+                <i class="fas fa-shield-alt"></i>
+                Your password is never stored or transmitted - all analysis happens locally in your browser
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
