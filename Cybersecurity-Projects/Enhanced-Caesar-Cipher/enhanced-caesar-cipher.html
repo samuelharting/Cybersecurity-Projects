@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Caesar Cipher - Cybersecurity Tool</title>
+    <style>
+        /* Modern, professional styling for cybersecurity theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #b0c4de;
+            font-size: 14px;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        textarea::placeholder {
+            color: #b0c4de;
+        }
+
+        /* Drag and drop styling */
+        textarea.drag-over {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .shift-section {
+            margin-bottom: 25px;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .encrypt-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .decrypt-btn {
+            background: linear-gradient(45deg, #4834d4, #686de0);
+            color: white;
+        }
+
+        .encrypt-btn:hover, .decrypt-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .examples-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .examples-title {
+            margin-bottom: 15px;
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        .example-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .result-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #00ff88;
+        }
+
+        .result-title {
+            margin-bottom: 10px;
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .result-text {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.4;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #ffd700;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Enhanced Caesar Cipher</h1>
+        <p class="subtitle">Cybersecurity Encryption/Decryption Tool</p>
+
+        <!-- Text Input Section -->
+        <div class="input-section">
+            <label for="inputText">Enter Text to Encrypt/Decrypt:</label>
+            <textarea 
+                id="inputText" 
+                placeholder="Type your message here or drag and drop text..."
+                autocomplete="off"
+            ></textarea>
+        </div>
+
+        <!-- Shift Value Section -->
+        <div class="shift-section">
+            <label for="shiftValue">Shift Value (1-25):</label>
+            <input type="number" id="shiftValue" min="1" max="25" value="3" />
+        </div>
+
+        <!-- Example Texts Section -->
+        <div class="examples-section">
+            <div class="examples-title">📝 Quick Examples - Click to Copy:</div>
+            <div class="example-buttons">
+                <button class="example-btn" onclick="copyExample('HELLO WORLD')">HELLO WORLD</button>
+                <button class="example-btn" onclick="copyExample('test123')">test123</button>
+                <button class="example-btn" onclick="copyExample('Cybersecurity Rules!')">Cybersecurity Rules!</button>
+                <button class="example-btn" onclick="copyExample('The quick brown fox jumps over 13 lazy dogs.')">Sample Sentence</button>
+                <button class="example-btn" onclick="copyExample('ABC xyz 789')">Mixed Case & Numbers</button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button class="encrypt-btn" onclick="performCipher('encrypt')">🔒 Encrypt</button>
+            <button class="decrypt-btn" onclick="performCipher('decrypt')">🔓 Decrypt</button>
+        </div>
+
+        <!-- Result Display -->
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title">Result:</div>
+            <div class="result-text" id="resultText"></div>
+            <button class="example-btn" onclick="copyResultToClipboard()" style="margin-top: 10px;">📋 Copy Result</button>
+        </div>
+
+        <!-- Information Box -->
+        <div class="info-box">
+            <strong>ℹ️ How it works:</strong> The Caesar cipher shifts each letter by a fixed number of positions in the alphabet. 
+            Numbers, spaces, and special characters remain unchanged. This tool automatically resets the input after each operation for security.
+        </div>
+    </div>
+
+    <script>
+        // Caesar Cipher Implementation
+        function caesarCipher(text, shift, mode) {
+            // Normalize shift value to ensure it's within 1-25 range
+            shift = parseInt(shift);
+            if (isNaN(shift) || shift < 1 || shift > 25) {
+                alert('Shift value must be between 1 and 25');
+                return null;
+            }
+
+            // For decryption, reverse the shift
+            if (mode === 'decrypt') {
+                shift = 26 - shift;
+            }
+
+            let result = '';
+            
+            // Process each character in the input text
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                
+                // Check if character is a letter
+                if (char.match(/[a-zA-Z]/)) {
+                    // Determine if uppercase or lowercase
+                    let isUpperCase = char === char.toUpperCase();
+                    let baseCharCode = isUpperCase ? 65 : 97; // 'A' or 'a'
+                    
+                    // Convert to 0-25 range, apply shift, wrap around if necessary
+                    let charCode = char.charCodeAt(0) - baseCharCode;
+                    let shiftedCode = (charCode + shift) % 26;
+                    
+                    // Convert back to character
+                    result += String.fromCharCode(shiftedCode + baseCharCode);
+                } else {
+                    // Non-letter characters remain unchanged
+                    result += char;
+                }
+            }
+            
+            return result;
+        }
+
+        // Main function to perform encryption/decryption
+        function performCipher(mode) {
+            const inputText = document.getElementById('inputText').value;
+            const shiftValue = document.getElementById('shiftValue').value;
+            const resultSection = document.getElementById('resultSection');
+            const resultText = document.getElementById('resultText');
+
+            // Validate inputs
+            if (!inputText.trim()) {
+                alert('Please enter some text to ' + mode);
+                return;
+            }
+
+            // More robust shift validation
+            const shiftNum = parseInt(shiftValue);
+            if (!shiftValue || isNaN(shiftNum) || shiftNum < 1 || shiftNum > 25) {
+                alert('Please enter a valid shift value between 1 and 25');
+                document.getElementById('shiftValue').value = 3; // Reset to default
+                document.getElementById('shiftValue').focus();
+                return;
+            }
+
+            // Perform the cipher operation
+            const result = caesarCipher(inputText, shiftValue, mode);
+            
+            if (result !== null) {
+                // Display result
+                resultText.textContent = result;
+                resultSection.style.display = 'block';
+                
+                // Update result title based on mode
+                const resultTitle = document.querySelector('.result-title');
+                resultTitle.textContent = mode === 'encrypt' ? '🔒 Encrypted Result:' : '🔓 Decrypted Result:';
+                
+                // Auto-reset input for security (clear sensitive data)
+                setTimeout(() => {
+                    document.getElementById('inputText').value = '';
+                    document.getElementById('inputText').focus();
+                }, 100);
+                
+                // Scroll to result
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Copy example text to input field
+        function copyExample(exampleText) {
+            document.getElementById('inputText').value = exampleText;
+            document.getElementById('inputText').focus();
+            
+            // Visual feedback
+            const textarea = document.getElementById('inputText');
+            textarea.style.borderColor = '#00ff88';
+            setTimeout(() => {
+                textarea.style.borderColor = '';
+            }, 500);
+        }
+
+        // Copy result to clipboard
+        function copyResultToClipboard() {
+            const resultText = document.getElementById('resultText').textContent;
+            const copyButton = document.querySelector('button[onclick="copyResultToClipboard()"]');
+            
+            if (!resultText || !resultText.trim()) {
+                alert('No result to copy');
+                return;
+            }
+            
+            // Modern clipboard API with fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(resultText).then(() => {
+                    showCopyFeedback(copyButton);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyTextToClipboard(resultText, copyButton);
+                });
+            } else {
+                fallbackCopyTextToClipboard(resultText, copyButton);
+            }
+        }
+
+        // Fallback copy method for older browsers
+        function fallbackCopyTextToClipboard(text, button) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "-1000px";
+            textArea.style.left = "-1000px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopyFeedback(button);
+                } else {
+                    alert('Copy failed. Please manually select and copy the result.');
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+                alert('Copy failed. Please manually select and copy the result.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Show visual feedback for successful copy
+        function showCopyFeedback(button) {
+            if (!button) return;
+            
+            const originalText = button.textContent;
+            const originalBackground = button.style.background;
+            
+            button.textContent = '✓ Copied!';
+            button.style.background = 'rgba(0, 255, 136, 0.3)';
+            button.style.borderColor = '#00ff88';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = originalBackground;
+                button.style.borderColor = '';
+            }, 1500);
+        }
+
+        // Drag and Drop Functionality
+        function setupDragAndDrop() {
+            const textarea = document.getElementById('inputText');
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                textarea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                textarea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                textarea.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files/text
+            textarea.addEventListener('drop', handleDrop, false);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                textarea.classList.add('drag-over');
+            }
+
+            function unhighlight(e) {
+                textarea.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                
+                // Handle text data
+                if (dt.types.includes('text/plain')) {
+                    const text = dt.getData('text/plain');
+                    textarea.value = text;
+                    textarea.focus();
+                }
+                
+                // Handle files (read as text)
+                if (dt.files.length > 0) {
+                    const file = dt.files[0];
+                    if (file.type.startsWith('text/') || file.name.endsWith('.txt')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            textarea.value = e.target.result;
+                            textarea.focus();
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        alert('Please drop a text file or select text to drag and drop.');
+                    }
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Enter or Cmd+Enter to encrypt
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                performCipher('encrypt');
+            }
+            
+            // Ctrl+Shift+Enter or Cmd+Shift+Enter to decrypt
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter') {
+                e.preventDefault();
+                performCipher('decrypt');
+            }
+        });
+
+        // Initialize drag and drop when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupDragAndDrop();
+            
+            // Focus on input field
+            document.getElementById('inputText').focus();
+            
+            // Add keyboard shortcut info to info box
+            const infoBox = document.querySelector('.info-box');
+            infoBox.innerHTML += '<br><strong>⌨️ Shortcuts:</strong> Ctrl+Enter to encrypt, Ctrl+Shift+Enter to decrypt';
+        });
+
+        // Input validation for shift value
+        document.getElementById('shiftValue').addEventListener('input', function(e) {
+            let value = parseInt(e.target.value);
+            
+            // Handle NaN cases (empty string or non-numeric input)
+            if (isNaN(value) || e.target.value.trim() === '') {
+                e.target.value = 3; // Reset to default
+                return;
+            }
+            
+            // Enforce range constraints
+            if (value < 1) e.target.value = 1;
+            if (value > 25) e.target.value = 25;
+        });
+    </script>
+</body>
+</html>
