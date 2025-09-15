@@ -1,116 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TT Trading — Discord</title>
-  <meta name="description" content="Join our futures trading community. Live trading, daily setups, VIP access.">
-  <meta property="og:title" content="TT Trading — Discord" />
-  <meta property="og:description" content="Join our futures trading community. Live trading, daily setups, VIP access." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/og.jpg" />
-  <meta name="color-scheme" content="light dark" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <title>Cybersecurity Projects – Sam Harting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#0b0b0f; --card:#121218; --muted:#a1a1aa; --text:#f5f5f7; --accent:#ef4444; --accent-2:#22c55e;
-      --radius:18px; --maxw:900px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,"Helvetica Neue",Arial; background:radial-gradient(1200px 800px at 80% -10%, #151523 0%, #0b0b0f 60%); color:var(--text);}
-    .wrap{min-height:100%; display:grid; place-items:center; padding:24px}
-    .card{width:100%; max-width:var(--maxw); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:28px; box-shadow:0 10px 30px rgba(0,0,0,.3)}
-    header{display:flex; align-items:center; gap:16px;}
-    .logo{width:54px; height:54px; position:relative; display:flex; align-items:center; justify-content:center}
-    .logo-inner{width:100%; height:100%; border:3px solid #ef4444; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(239,68,68,.05)}
-    .logo-tt{font-size:18px; font-weight:800; color:#ef4444; line-height:1; margin-bottom:2px}
-    .logo-text{font-size:8px; font-weight:700; color:#ef4444; letter-spacing:0.5px; text-align:center}
-    h1{margin:4px 0 0; font-size:clamp(26px,6vw,42px); font-weight:800; background:linear-gradient(135deg, #fff, #f1f5f9); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
-    p.sub{margin:6px 0 0; color:var(--muted); font-size:clamp(13px,2.8vw,16px)}
-    .grid{display:grid; gap:18px; grid-template-columns:1fr; margin-top:24px}
-    @media (min-width:700px){.grid{grid-template-columns:1fr 1fr; gap:20px}}
-    @media (max-width:480px){.btn{font-size:18px; padding:20px 24px; min-height:60px}}
-    .cta{display:flex; flex-direction:column; gap:12px; padding:20px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.02)}
-    .cta h3{margin:0 0 6px 0; font-size:18px}
-    .cta p{margin:0; color:var(--muted); font-size:14px}
-    .btn{appearance:none; border:none; padding:18px 24px; border-radius:12px; font-weight:700; letter-spacing:.2px; cursor:pointer; text-decoration:none; text-align:center; font-size:16px; transition:all .2s ease; min-height:56px; display:flex; align-items:center; justify-content:center}
-    .btn.primary{background:linear-gradient(135deg, var(--accent), #ff6b6b); color:white; box-shadow:0 4px 20px rgba(239,68,68,.3)}
-    .btn.secondary{background:linear-gradient(135deg, var(--accent-2), #34d399); color:white; box-shadow:0 4px 20px rgba(34,197,94,.3)}
-    .btn:hover{transform:translateY(-2px); box-shadow:0 8px 30px rgba(239,68,68,.4)}
-    .btn.secondary:hover{box-shadow:0 8px 30px rgba(34,197,94,.4)}
-    .btn.full{width:100%}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px}
-    .kpi{background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07); border-radius:12px; padding:12px; text-align:center}
-    .kpi .big{font-size:20px; font-weight:800}
-    .note{margin-top:18px; color:var(--muted); font-size:12px}
-    footer{margin-top:22px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:12px}
-    .input{display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px}
-    .input input{flex:1; background:transparent; border:none; outline:none; color:var(--text); padding:8px}
-    .disclaimer{margin-top:10px; font-size:11px; color:#9ca3af}
-    a{color:inherit}
+    body{margin:0;background:#0b0f14;color:#cbd5e1;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial;}
+    .wrap{max-width:1000px;margin:60px auto;padding:0 20px}
+    h1{font-weight:800;color:#e2e8f0;margin-bottom:6px}
+    h2{margin-top:36px;color:#e2e8f0}
+    p{color:#94a3b8}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;padding:16px;text-decoration:none;color:inherit;transition:.15s transform}
+    .card:hover{transform:translateY(-2px)}
+    .tag{display:inline-block;font-size:12px;background:#111827;border:1px solid #374151;border-radius:999px;padding:4px 10px;margin-top:8px;color:#9ca3af}
+    .small{font-size:12px;color:#64748b}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card" aria-label="TT Trading Link Page">
-      <header>
-        <div class="logo" aria-hidden="true">
-          <div class="logo-inner">
-            <div class="logo-tt">TT</div>
-            <div class="logo-text">TRADING</div>
-          </div>
-        </div>
-        <div>
-          <h1>Join Our Futures Trading Discord</h1>
-          <p class="sub">Live trading • Daily setups • Growing community</p>
-        </div>
-      </header>
+  <div class="wrap">
+    <h1>Cybersecurity Projects</h1>
+    <p class="small">All tools are static and run locally in your browser (privacy-first).</p>
 
-      <div class="kpis" aria-label="social proof">
-        <div class="kpi"><div class="big" id="members">500+</div><div>Members</div></div>
-        <div class="kpi"><div class="big">M-F</div><div>Live Trading</div></div>
-        <div class="kpi"><div class="big">MNQ/MES</div><div>Focus</div></div>
-      </div>
+    <h2>Interactive Web Tools</h2>
+    <div class="grid">
+      <a class="card" href="./Password-Strength-Checker/">
+        <h3>Password Strength Checker →</h3>
+        <p>Real-time scoring (length + character types).</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./Password-Generator-Web-Tool/password-generator.html">
+        <h3>Password Generator →</h3>
+        <p>Length/charset toggles + copy.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./Caesar Cipher Web EncryptorDecryptor/caesar_cipher.html">
+        <h3>Caesar Cipher →</h3>
+        <p>Encode/decode with shift slider.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./Enhanced-Caesar-Cipher/enhanced-caesar-cipher.html">
+        <h3>Enhanced Caesar Cipher →</h3>
+        <p>Extended character set + UX.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./AES-Encryption/aes-file-encryption.html">
+        <h3>AES File Encryption (demo) →</h3>
+        <p>Client-side encrypt/decrypt with samples.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./Network-Traffic-Logger/network-traffic-logger.html">
+        <h3>Network Traffic Logger (UI) →</h3>
+        <p>Visualization prototype with sample data.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+      <a class="card" href="./Basic-Port-Scanner-Status/port-scanner.html">
+        <h3>Port Scanner (UI) →</h3>
+        <p>Demonstrative scanning workflow.</p>
+        <span class="tag">HTML/CSS/JS</span>
+      </a>
+    </div>
 
-      <div class="grid">
-        <div class="cta" aria-label="free community">
-          <h3>Join Free Discord</h3>
-          <p>Get access to general chat, trade recaps, and community challenges.</p>
-          <a class="btn primary full" href="https://discord.gg/pRhcjFvj" target="_blank" rel="noopener">Join Free Discord</a>
-        </div>
-
-        <div class="cta" aria-label="vip access">
-          <h3>VIP Access</h3>
-          <p>Live screen-share, alerts, and private Q&A. Early-bird pricing for first 100.</p>
-          <a class="btn secondary full" href="WHOP_CHECKOUT_URL" target="_blank" rel="noopener">VIP Access</a>
-        </div>
-      </div>
-
-      <!-- Email signup (easy to disable by commenting out this section) -->
-      <div class="row" style="margin-top:18px">
-        <form class="input" action="https://formspree.io/f/XXXXXXX" method="POST" aria-label="email capture">
-          <input required type="email" name="email" placeholder="Enter email for updates & VIP access" />
-          <button class="btn primary" type="submit">Notify Me</button>
-        </form>
-      </div>
-
-      <p class="note">We keep it real: no financial advice, just live process. Cancel anytime when VIP launches via Whop/Stripe.</p>
-      <p class="disclaimer">Educational only. Trading involves risk.</p>
-
-      <footer>
-        <span>© <span id="yr"></span> TT Trading</span>
-        <span><a href="#" onclick="document.getElementById('members').textContent = Math.floor(500+Math.random()*200)+'+'; return false;">Refresh stats</a></span>
-      </footer>
-    </section>
-  </main>
-
-  <script>
-    // simple year setter
-    document.getElementById('yr').textContent = new Date().getFullYear();
-  </script>
+    <h2>Notes</h2>
+    <p class="small">Source: GitHub repo. These are educational demos.</p>
+  </div>
 </body>
 </html>
